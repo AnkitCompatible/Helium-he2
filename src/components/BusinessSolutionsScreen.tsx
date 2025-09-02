@@ -1,19 +1,7 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
-  Alert,
-  Image,
-  ScrollView,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, Alert, Image, ScrollView, TextInput, KeyboardAvoidingView, Platform,Pressable,} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { MessageSquare,User,House,ChartColumn,CircleQuestionMark , CircleCheck,} from 'lucide-react-native';
 
 
 type BusinessSolutionsScreenProps = {
@@ -26,6 +14,7 @@ type BusinessSolutionsScreenProps = {
 const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBack }: BusinessSolutionsScreenProps) => {
   const [showMenu, setShowMenu] = React.useState(false);
   const [showSidebar, setShowSidebar] = React.useState(false);
+  const [isDarkMode, setIsDarkMode] = React.useState(true); // Start with dark mode
   const [draft, setDraft] = React.useState('');
   const inputRef = React.useRef<TextInput>(null);
 
@@ -46,6 +35,10 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
     setDraft('');
     // Navigate to home screen with the message
     onNavigateToHome();
+  };
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
   };
 
   const handleLogout = () => {
@@ -70,29 +63,37 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* Header with Back Button and Hamburger Menu */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+    <SafeAreaView style={[styles.container, { backgroundColor: isDarkMode ? '#1a1a1a' : '#F1F1F1' }]}>
+      {/* Header with Back Button, Dark Mode Toggle, and Hamburger Menu */}
+      <View style={[styles.header, { backgroundColor: isDarkMode ? '#1a1a1a' : '#F1F1F1' }]}>
+        <TouchableOpacity style={[styles.backButton, { backgroundColor: isDarkMode ? '#2a2a2a' : '#F5F5F5' }]} onPress={onBack}>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>H</Text>
+            <Text style={styles.avatarText}>{displayName.charAt(0).toUpperCase()}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuButton} onPress={() => setShowSidebar(true)}>
-          <View style={styles.hamburgerIcon}>
-            <View style={styles.hamburgerLine} />
-            <View style={styles.hamburgerLine} />
-            <View style={styles.hamburgerLine} />
-          </View>
-        </TouchableOpacity>
+        
+        <View style={styles.headerButtons}>
+          <TouchableOpacity style={[styles.darkModeButton, { backgroundColor: isDarkMode ? '#2a2a2a' : '#F5F5F5' }]} onPress={toggleDarkMode}>
+            <Text style={[styles.darkModeIcon, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>
+              {isDarkMode ? '☀️' : '🌙'}
+            </Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={[styles.menuButton, { backgroundColor: isDarkMode ? '#2a2a2a' : '#F5F5F5' }]} onPress={() => setShowSidebar(true)}>
+            <View style={styles.hamburgerIcon}>
+              <View style={[styles.hamburgerLine, { backgroundColor: isDarkMode ? '#FFFFFF' : '#000000' }]} />
+              <View style={[styles.hamburgerLine, { backgroundColor: isDarkMode ? '#FFFFFF' : '#000000' }]} />
+              <View style={[styles.hamburgerLine, { backgroundColor: isDarkMode ? '#FFFFFF' : '#000000' }]} />
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Main Content - Scrollable */}
       <View style={styles.scrollContainer}>
         {/* Avatar and Title */}
         <View style={styles.titleSection}>
-          
-          <Text style={styles.title}>How do I help your business today?</Text>
+          <Text style={[styles.title, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>How do I help your business today?</Text>
         </View>
 
         {/* Cards Grid - 2x2 Layout */}
@@ -101,29 +102,27 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
             <TouchableOpacity style={[styles.card, styles.consultantCard]}>
               <View style={styles.cardTop}>
                 <View style={styles.personIcon}>
-                  <Image
-                    source={require('../../assets/user.png')} 
-                    style={styles.chatBubble}
-                    resizeMode="contain" 
-                  />
+                <User 
+                  size={30} 
+                  color={isDarkMode ? '#FFFFFF' : '#000000'} 
+                />
                 </View>
-                <Text style={styles.arrowIcon}>›</Text>
+                <Text style={[styles.arrowIcon, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>›</Text>
               </View>
-              <Text style={styles.cardText}>Talk with Consultant</Text>
+              <Text style={[styles.cardText, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>Talk with Consultant</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={[styles.card, styles.consultantCard]}>
               <View style={styles.cardTop}>
                 <View style={styles.personIcon}>
-                  <Image
-                    source={require('../../assets/user.png')} 
-                    style={styles.chatBubble}
-                    resizeMode="contain" 
-                  />
+                <User 
+                  size={30} 
+                  color={isDarkMode ? '#FFFFFF' : '#000000'} 
+                />
                 </View>
-                <Text style={styles.arrowIcon}>›</Text>
+                <Text style={[styles.arrowIcon, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>›</Text>
               </View>
-              <Text style={styles.cardText}>Talk with Consultant</Text>
+              <Text style={[styles.cardText, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>Talk with Consultant</Text>
             </TouchableOpacity>
           </View>
 
@@ -131,29 +130,27 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
             <TouchableOpacity style={[styles.card, styles.consultantCard]}>
               <View style={styles.cardTop}>
                 <View style={styles.personIcon}>
-                  <Image
-                    source={require('../../assets/user.png')} 
-                    style={styles.chatBubble}
-                    resizeMode="contain" 
-                  />
+                <User 
+                  size={30} 
+                  color={isDarkMode ? '#FFFFFF' : '#000000'} 
+                />
                 </View>
-                <Text style={styles.arrowIcon}>›</Text>
+                <Text style={[styles.arrowIcon, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>›</Text>
               </View>
-              <Text style={styles.cardText}>Talk with Consultant</Text>
+              <Text style={[styles.cardText, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>Talk with Consultant</Text>
             </TouchableOpacity>
             
             <TouchableOpacity style={[styles.card, styles.aiCard]}>
               <View style={styles.cardTop}>
                 <View style={styles.chatIcon}>
-                  <Image
-                    source={require('../../assets/message.png')} 
-                    style={styles.chatBubble}
-                    resizeMode="contain" 
+                  <MessageSquare 
+                    size={30} 
+                    color={isDarkMode ? '#FFFFFF' : '#000000'} 
                   />
                 </View>
-                <Text style={styles.arrowIcon}>›</Text>
+                <Text style={[styles.arrowIcon, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>›</Text>
               </View>
-              <Text style={styles.cardText}>Chat with AI{'\n'}Assistant</Text>
+              <Text style={[styles.cardText, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>Chat with AI{'\n'}Assistant</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -162,14 +159,14 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
       {/* Input Section - Fixed at bottom */}
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
-        style={styles.inputContainer}
+        style={[styles.inputContainer, { backgroundColor: isDarkMode ? '#1a1a1a' : '#F1F1F1' }]}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
-        <Pressable style={styles.glowRing} onPress={() => inputRef.current?.focus()}>
-          <View style={styles.inputWrapper}>
+        <Pressable style={[styles.glowRing, { backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF' }]} onPress={() => inputRef.current?.focus()}>
+          <View style={[styles.inputWrapper, { backgroundColor: isDarkMode ? '#2a2a2a' : '#FFFFFF' }]}>
             <TextInput
               ref={inputRef}
-              style={styles.input}
+              style={[styles.input, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}
               placeholder="" 
               placeholderTextColor="#9ca3af"
               multiline
@@ -178,21 +175,27 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
             />
             {/* Attach button - bottom left */}
             <TouchableOpacity onPress={() => {}} activeOpacity={0.7} style={styles.attachBtn}>
-              <Image source={require('../../assets/WhiteAttach.png')} style={styles.iconImg} resizeMode="contain" />
+              <Image source={isDarkMode ? require('../../assets/attach.png') : require('../../assets/WhiteAttach.png')}
+               style={styles.iconImg} resizeMode="contain" />
             </TouchableOpacity>
             {/* Mic button - left to send */}
             <TouchableOpacity onPress={() => {}} activeOpacity={0.7} style={styles.micBtn}>
-              <Image source={require('../../assets/WhiteMic.png')} style={styles.iconImg} resizeMode="contain" />
+              <Image 
+                source={isDarkMode ? require('../../assets/mic.png') : require('../../assets/WhiteMic.png')} 
+                style={styles.iconImg} 
+                resizeMode="contain" 
+              />
             </TouchableOpacity>
             <TouchableOpacity onPress={onNavigateToHome} activeOpacity={0.8} style={styles.sendBtn}>
-              <Image source={require('../../assets/send.png')} style={styles.sendImg} resizeMode="contain" />
+              <Image  source={isDarkMode ? require('../../assets/darkSend.png') : require('../../assets/send.png')} 
+               style={styles.sendImg} resizeMode="contain" />
             </TouchableOpacity>
           </View>
         </Pressable>
       </KeyboardAvoidingView>
 
       {/* Bottom Navigation Bar - Horizontally Scrollable */}
-      <View style={styles.bottomNavContainer}>
+      <View style={[styles.bottomNavContainer, { backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF', borderTopColor: isDarkMode ? '#333333' : '#E0E0E0' }]}>
         <ScrollView 
           horizontal 
           showsHorizontalScrollIndicator={false}
@@ -200,35 +203,36 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
           style={styles.bottomNavScroll}
         >
           <TouchableOpacity style={styles.navItem}>
-            <Image 
-                source={require('../../assets/home.png')} 
-                style={styles.navIcon}
-                resizeMode="contain" />          
+          <House 
+            size={24} 
+            color={isDarkMode ? '#FFFFFF' : '#000000'} 
+          />       
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>
-            <Image 
-                source={require('../../assets/chart.png')} 
-                style={styles.navIcon}
-                resizeMode="contain" />  
+          <ChartColumn 
+            size={24} 
+            color={isDarkMode ? '#FFFFFF' : '#000000'} 
+          /> 
+
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>
-            <Image 
-                source={require('../../assets/question.png')} 
-                style={styles.navIcon}
-                resizeMode="contain" />  
+          <CircleQuestionMark 
+            size={24} 
+            color={isDarkMode ? '#FFFFFF' : '#000000'} 
+          />
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>
-            <Image 
-                source={require('../../assets/tick.png')} 
-                style={styles.navIcon}
-                resizeMode="contain" />  
+          <CircleCheck 
+            size={24} 
+            color={isDarkMode ? '#FFFFFF' : '#000000'} 
+          />
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>
             <View style={styles.activeProfileIcon}>
-              <Image 
-                  source={require('../../assets/userIcon.png')} 
-                  style={styles.navIcon}
-                  resizeMode="contain" />          
+            <User 
+              size={24} 
+              color={isDarkMode ? '#FFFFFF' : '#000000'} 
+            />
             </View>
           </TouchableOpacity>
         </ScrollView>
@@ -247,14 +251,14 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
             activeOpacity={1} 
             onPress={() => setShowSidebar(false)}
           />
-          <View style={styles.sidebarContainer}>
-            <View style={styles.sidebarHeader}>
-              <Text style={styles.sidebarTitle}>Chat History</Text>
+          <View style={[styles.sidebarContainer, { backgroundColor: isDarkMode ? '#2a2a2a' : '#FFFFFF' }]}>
+            <View style={[styles.sidebarHeader, { borderBottomColor: isDarkMode ? '#444444' : '#E0E0E0' }]}>
+              <Text style={[styles.sidebarTitle, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>Chat History</Text>
               <TouchableOpacity 
-                style={styles.closeButton} 
+                style={[styles.closeButton, { backgroundColor: isDarkMode ? '#444444' : '#F5F5F5' }]} 
                 onPress={() => setShowSidebar(false)}
               >
-                <Text style={styles.closeButtonText}>×</Text>
+                <Text style={[styles.closeButtonText, { color: isDarkMode ? '#FFFFFF' : '#666666' }]}>×</Text>
               </TouchableOpacity>
             </View>
             
@@ -262,20 +266,20 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
               {chatHistory.map((chat) => (
                 <TouchableOpacity 
                   key={chat.id} 
-                  style={styles.historyItem}
+                  style={[styles.historyItem, { borderBottomColor: isDarkMode ? '#444444' : '#F0F0F0' }]}
                   onPress={() => {
                     setShowSidebar(false);
                     onNavigateToHome();
                   }}
                 >
-                  <Text style={styles.historyTitle}>{chat.title}</Text>
-                  <Text style={styles.historyPreview}>{chat.preview}</Text>
+                  <Text style={[styles.historyTitle, { color: isDarkMode ? '#FFFFFF' : '#000000' }]}>{chat.title}</Text>
+                  <Text style={[styles.historyPreview, { color: isDarkMode ? '#CCCCCC' : '#666666' }]}>{chat.preview}</Text>
                   <Text style={styles.historyTimestamp}>{chat.timestamp}</Text>
                 </TouchableOpacity>
               ))}
             </ScrollView>
             
-            <View style={styles.sidebarFooter}>
+            <View style={[styles.sidebarFooter, { borderTopColor: isDarkMode ? '#444444' : '#E0E0E0' }]}>
               <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                 <Text style={styles.logoutButtonText}>Sign out</Text>
               </TouchableOpacity>
@@ -290,7 +294,7 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F1F1F1',
+    backgroundColor: '#1a1a1a',
   },
   header: {
     flexDirection: 'row',
@@ -304,20 +308,37 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#2a2a2a',
     alignItems: 'center',
     justifyContent: 'center',
   },
   backButtonText: {
     fontSize: 24,
-    color: '#000000',
+    color: '#FFFFFF',
     fontWeight: 'bold',
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  darkModeButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#2a2a2a',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  darkModeIcon: {
+    fontSize: 18,
+    color: '#FFFFFF',
   },
   menuButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#2a2a2a',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -329,7 +350,7 @@ const styles = StyleSheet.create({
   hamburgerLine: {
     width: 20,
     height: 2,
-    backgroundColor: '#000000',
+    backgroundColor: '#FFFFFF',
     borderRadius: 1,
   },
   scrollContainer: {
@@ -361,7 +382,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#FFFFFF',
     lineHeight: 50,
   },
     cardsGrid: {
@@ -421,13 +442,13 @@ const styles = StyleSheet.create({
   },
   arrowIcon: {
     fontSize: 20,
-    color: '#000000',
+    color: '#FFFFFF',
     fontWeight: 'bold',
   },
   cardText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#FFFFFF',
     textAlign: 'center',
     lineHeight: 20,
   },
@@ -453,7 +474,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom:190,
     height: 200,
-    backgroundColor: '#F1F1F1',
+    backgroundColor: '#1a1a1a',
   },
   inputWrapper: {
     position: 'absolute',
@@ -461,7 +482,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#00ff88',
     padding: 6,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#2a2a2a',
     shadowColor: '#00ff88',
     shadowOpacity: 0.35,
     shadowOffset: { width: 0, height: 0 },
@@ -472,7 +493,7 @@ const styles = StyleSheet.create({
   glowRing: { 
     borderRadius: 14,
     padding: 2,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#1a1a1a',
     alignSelf: 'stretch',
   },
   input: {
@@ -483,6 +504,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingBottom: 40,
     textAlignVertical: 'top',
+    color: '#FFFFFF',
   },
   sendBtn: {
     position: 'absolute',
@@ -542,9 +564,9 @@ const styles = StyleSheet.create({
   },
   bottomNavContainer: {
     height: 60,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#1a1a1a',
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    borderTopColor: '#333333',
   },
   bottomNavScroll: {
     flex: 1,
@@ -552,7 +574,7 @@ const styles = StyleSheet.create({
   bottomNav: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 38,
     minWidth: '100%',
   },
   navItem: {
@@ -560,7 +582,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 50,
     height: 40,
-    marginHorizontal: 8,
+    marginHorizontal: 10,
   },
   navIcon: {
     width: 24,
@@ -570,7 +592,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 32,
     borderRadius: 25,
-    backgroundColor: '#C6FF00',
+    // backgroundColor: '#C6FF00',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -626,7 +648,7 @@ const styles = StyleSheet.create({
   sidebarContainer: {
     width: 300,
     height: '100%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#2a2a2a',
     shadowColor: '#000',
     shadowOffset: {
       width: -2,
@@ -643,24 +665,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: '#444444',
   },
   sidebarTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#FFFFFF',
   },
   closeButton: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#444444',
     alignItems: 'center',
     justifyContent: 'center',
   },
   closeButtonText: {
     fontSize: 18,
-    color: '#666666',
+    color: '#FFFFFF',
     fontWeight: 'bold',
   },
   historyList: {
@@ -670,17 +692,17 @@ const styles = StyleSheet.create({
   historyItem: {
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
+    borderBottomColor: '#444444',
   },
   historyTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#000000',
+    color: '#FFFFFF',
     marginBottom: 4,
   },
   historyPreview: {
     fontSize: 14,
-    color: '#666666',
+    color: '#CCCCCC',
     marginBottom: 4,
   },
   historyTimestamp: {
@@ -691,7 +713,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     borderTopWidth: 1,
-    borderTopColor: '#E0E0E0',
+    borderTopColor: '#444444',
   },
   logoutButton: {
     backgroundColor: '#FF4444',

@@ -175,7 +175,7 @@ const HomeScreen = ({ displayName, onLogout, onBack }: HomeScreenProps) => {
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
         style={styles.inputContainer}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
       >
         <Pressable style={styles.glowRing} onPress={() => inputRef.current?.focus()}>
           <View style={styles.inputWrapper}>
@@ -276,12 +276,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 1,
   },
-  inputContainer: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-    height:150,
-    backgroundColor: 'black',
-  },
+  inputContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    paddingTop: 10,
+    backgroundColor: 'black',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
   logoutBtn: {
     marginTop: 16,
     alignSelf: 'flex-start',
@@ -314,21 +318,21 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     fontSize: 16,
   },
-  inputWrapper: {
-    position: 'relative',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#00ff88',
-    padding: 6,
-    backgroundColor: '#1f1f1f',
-    shadowColor: '#00ff88',
-    shadowOpacity: 0.35,
-    shadowOffset: { width: 0, height: 0 },
-    shadowRadius: 8,
-    width: '100%',
-    height: '55%',
-    
-  },
+  inputWrapper: {
+    position: 'relative',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#00ff88',
+    padding: 6,
+    backgroundColor: '#1f1f1f',
+    shadowColor: '#00ff88',
+    shadowOpacity: 0.35,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 8,
+    width: '100%',
+    height: 150,
+    minHeight: 10,
+  },
 // inputWrapper::after{
 //    width: '100%',
 //     height: '55%',
@@ -339,17 +343,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     alignSelf: 'stretch',
   },
-  input: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 8,
-    // borderWidth: 1,
-    borderColor: '#3a3a3a',
-    paddingHorizontal: 14,
-    paddingBottom:40 ,
-    color: '#e5e7eb',
-    textAlignVertical: 'top',
-  },
+  input: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+    borderColor: '#3a3a3a',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    color: '#e5e7eb',
+    textAlignVertical: 'center',
+    fontSize: 16,
+  },
   inlineAccessoryLeft: {
     position: 'absolute',
     left: 10,
@@ -374,32 +378,31 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: '#2a2a2a',
   },
-  sendBtn: {
-    position: 'absolute',
-    right: 12,
-    bottom: 10,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    // backgroundColor: '#00ff88',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  sendBtn: {
+    position: 'absolute',
+    right: 12,
+    top: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   sendTxt: {
     color: '#0b0b0b',
     fontSize: 16,
     fontWeight: '700',
   },
-  attachBtn: {
-    position: 'absolute',
-    left: 12,
-    bottom: 10,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  attachBtn: {
+    position: 'absolute',
+    left: 12,
+    top: 14,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   attachTxt: {
     color: '#8a8a8a',
     fontSize: 16,
@@ -411,16 +414,16 @@ const styles = StyleSheet.create({
     margin: 10,
 
   },
-  micBtn: {
-    position: 'absolute',
-    right: 52,
-    bottom: 10,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  micBtn: {
+    position: 'absolute',
+    right: 52,
+    top: 14,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   micTxt: {
     color: '#8a8a8a',
     fontSize: 16,
@@ -432,13 +435,14 @@ const styles = StyleSheet.create({
   text:{
     alignItems: 'center', 
   },
-  messagesContainer: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  messagesContentContainer: {
-    paddingBottom: 20,
-  },
+  messagesContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    paddingBottom: 100, // Add space for the fixed input at bottom
+  },
+  messagesContentContainer: {
+    paddingBottom: 20,
+  },
   messageBubble: {
     marginVertical: 8,
     paddingHorizontal: 16,
