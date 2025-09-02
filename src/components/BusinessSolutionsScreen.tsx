@@ -74,8 +74,13 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
           <TouchableOpacity style={[styles.card, styles.consultantCard]}>
             <View style={styles.cardTop}>
               <View style={styles.personIcon}>
-                <View style={styles.personHead} />
-                <View style={styles.personBody} />
+                {/* <View style={styles.personHead} /> */}
+                {/* <View style={styles.personBody} /> */}
+                <Image
+                  source={require('../../assets/user.png')} 
+                  style={styles.chatBubble}
+                  resizeMode="contain" 
+                />
               </View>
               <Text style={styles.arrowIcon}>›</Text>
             </View>
@@ -85,7 +90,12 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
           <TouchableOpacity style={[styles.card, styles.aiCard]}>
             <View style={styles.cardTop}>
               <View style={styles.chatIcon}>
-                <View style={styles.chatBubble} />
+              <Image
+                  source={require('../../assets/message.png')} 
+                  style={styles.chatBubble}
+                  resizeMode="contain" 
+                />
+                {/* <View style={styles.chatBubble} /> */}
               </View>
               <Text style={styles.arrowIcon}>›</Text>
             </View>
@@ -157,7 +167,7 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
       {/* Floating Action Button - Fixed position over content */}
       <TouchableOpacity style={styles.floatingButton} onPress={onNavigateToHome}>
         <Image
-          source={require('../../assets/post-feed-navigation-item.png')} 
+          source={require('../../assets/message.png')} 
           style={styles.floatingButtonIcon}
           resizeMode="contain"
         />
@@ -344,19 +354,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  personHead: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#000000',
-    marginBottom: 2,
-  },
-  personBody: {
-    width: 16,
-    height: 8,
-    backgroundColor: '#000000',
-    borderRadius: 2,
-  },
+ 
   chatIcon: {
     width: 24,
     height: 24,
@@ -364,10 +362,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   chatBubble: {
-    width: 20,
-    height: 16,
-    backgroundColor: '#000000',
-    borderRadius: 8,
+    width: 30,
+    height: 30,
+    paddingRight:5,
   },
   arrowIcon: {
     fontSize: 20,
