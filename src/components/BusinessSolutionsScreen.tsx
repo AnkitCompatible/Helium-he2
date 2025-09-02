@@ -8,6 +8,10 @@ import {
   Alert,
   Image,
   ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -21,6 +25,18 @@ type BusinessSolutionsScreenProps = {
 
 const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBack }: BusinessSolutionsScreenProps) => {
   const [showMenu, setShowMenu] = React.useState(false);
+  const [draft, setDraft] = React.useState('');
+  const inputRef = React.useRef<TextInput>(null);
+
+  const handleSend = () => {
+    const trimmed = draft.trim();
+    if (!trimmed) return;
+    
+    console.log('[Business] Sent message:', trimmed);
+    setDraft('');
+    // Navigate to home screen with the message
+    onNavigateToHome();
+  };
 
   const handleLogout = () => {
     Alert.alert(
@@ -60,7 +76,7 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
       </View>
 
       {/* Main Content - Scrollable */}
-      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
+      <View style={styles.scrollContainer}>
         {/* Avatar and Title */}
         <View style={styles.titleSection}>
           <View style={styles.avatar}>
@@ -69,13 +85,16 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
           <Text style={styles.title}>How do I help your business today?</Text>
         </View>
 
-        {/* Options Row - Two Cards */}
-        <View style={styles.cardsRow}>
+        {/* Options Row - Horizontally Scrollable Cards */}
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.cardsScrollContent}
+          style={styles.cardsScrollContainer}
+        >
           <TouchableOpacity style={[styles.card, styles.consultantCard]}>
             <View style={styles.cardTop}>
               <View style={styles.personIcon}>
-                {/* <View style={styles.personHead} /> */}
-                {/* <View style={styles.personBody} /> */}
                 <Image
                   source={require('../../assets/user.png')} 
                   style={styles.chatBubble}
@@ -87,136 +106,123 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
             <Text style={styles.cardText}>Talk with Consultant</Text>
           </TouchableOpacity>
 
+          <TouchableOpacity style={[styles.card, styles.consultantCard]}>
+            <View style={styles.cardTop}>
+              <View style={styles.personIcon}>
+                <Image
+                  source={require('../../assets/user.png')} 
+                  style={styles.chatBubble}
+                  resizeMode="contain" 
+                />
+              </View>
+              <Text style={styles.arrowIcon}>›</Text>
+            </View>
+            <Text style={styles.cardText}>Talk with Consultant</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.card, styles.consultantCard]}>
+            <View style={styles.cardTop}>
+              <View style={styles.personIcon}>
+                <Image
+                  source={require('../../assets/user.png')} 
+                  style={styles.chatBubble}
+                  resizeMode="contain" 
+                />
+              </View>
+              <Text style={styles.arrowIcon}>›</Text>
+            </View>
+            <Text style={styles.cardText}>Talk with Consultant</Text>
+          </TouchableOpacity>
+          
           <TouchableOpacity style={[styles.card, styles.aiCard]}>
             <View style={styles.cardTop}>
               <View style={styles.chatIcon}>
-              <Image
+                <Image
                   source={require('../../assets/message.png')} 
                   style={styles.chatBubble}
                   resizeMode="contain" 
                 />
-                {/* <View style={styles.chatBubble} /> */}
               </View>
               <Text style={styles.arrowIcon}>›</Text>
             </View>
             <Text style={styles.cardText}>Chat with AI{'\n'}Assistant</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
+      </View>
 
-        {/* Business Solutions Label */}
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
+      {/* Input Section - Fixed at bottom */}
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+        style={styles.inputContainer}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <Pressable style={styles.glowRing} onPress={() => inputRef.current?.focus()}>
+          <View style={styles.inputWrapper}>
+            <TextInput
+              ref={inputRef}
+              style={styles.input}
+              placeholder="" 
+              placeholderTextColor="#9ca3af"
+              multiline
+              value={draft}
+              onChangeText={setDraft}
+            />
+            {/* Attach button - bottom left */}
+            <TouchableOpacity onPress={() => {}} activeOpacity={0.7} style={styles.attachBtn}>
+              <Image source={require('../../assets/attach.png')} style={styles.iconImg} resizeMode="contain" />
+            </TouchableOpacity>
+            {/* Mic button - left to send */}
+            <TouchableOpacity onPress={() => {}} activeOpacity={0.7} style={styles.micBtn}>
+              <Image source={require('../../assets/mic.png')} style={styles.iconImg} resizeMode="contain" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleSend} activeOpacity={0.8} style={styles.sendBtn}>
+              <Image source={require('../../assets/send.png')} style={styles.sendImg} resizeMode="contain" />
+            </TouchableOpacity>
+          </View>
+        </Pressable>
+      </KeyboardAvoidingView>
 
-
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
-        <View style={styles.businessSolutionsLabel}>
-          <View style={styles.graphIcon} />
-          <Text style={styles.labelText}>Business Solutions</Text>
-        </View>
-
-        
-
-
-
-        {/* Business Operations Subtext */}
-        <View style={styles.businessOperationsLabel}>
-          <View style={styles.operationsIcon} />
-          
-          <Text style={styles.subtext}>Business Operations</Text>
-        </View>
-
-      </ScrollView>
-
-      {/* Floating Action Button - Fixed position over content */}
-      <TouchableOpacity style={styles.floatingButton} onPress={onNavigateToHome}>
-        <Image
-          source={require('../../assets/message.png')} 
-          style={styles.floatingButtonIcon}
-          resizeMode="contain"
-        />
-        <Text style={styles.floatingButtonText}>Start business chat</Text>
-      </TouchableOpacity>
-
-      {/* Bottom Navigation Bar */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>
+      {/* Bottom Navigation Bar - Horizontally Scrollable */}
+      <View style={styles.bottomNavContainer}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.bottomNav}
+          style={styles.bottomNavScroll}
+        >
+          <TouchableOpacity style={styles.navItem}>
             <Image 
                 source={require('../../assets/home.png')} 
-                style={styles.activeProfileText}
+                style={styles.navIcon}
                 resizeMode="contain" />          
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
             <Image 
                 source={require('../../assets/chart.png')} 
-                style={styles.activeProfileText}
+                style={styles.navIcon}
                 resizeMode="contain" />  
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
             <Image 
                 source={require('../../assets/question.png')} 
-                style={styles.activeProfileText}
+                style={styles.navIcon}
                 resizeMode="contain" />  
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
             <Image 
                 source={require('../../assets/tick.png')} 
-                style={styles.activeProfileText}
+                style={styles.navIcon}
                 resizeMode="contain" />  
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <View style={styles.activeProfileIcon}>
-            {/* <Text ></Text> */}
-             <Image 
-                source={require('../../assets/userIcon.png')} 
-                style={styles.activeProfileText}
-                resizeMode="contain" />          
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
+            <View style={styles.activeProfileIcon}>
+              <Image 
+                  source={require('../../assets/userIcon.png')} 
+                  style={styles.navIcon}
+                  resizeMode="contain" />          
+            </View>
+          </TouchableOpacity>
+        </ScrollView>
       </View>
 
       {/* Hamburger Menu Modal */}
@@ -296,6 +302,7 @@ const styles = StyleSheet.create({
   },
   titleSection: {
     marginBottom: 24,
+    marginLeft:20,
   },
   avatar: {
     width: 50,
@@ -317,16 +324,24 @@ const styles = StyleSheet.create({
     color: '#000000',
     lineHeight: 50,
   },
+  cardsScrollContainer: {
+    marginBottom: 24,
+  },
+  cardsScrollContent: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+  },
   cardsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     // marginBottom: 24,
   },
   card: {
-    width: '45%',
-    height: 250,
+    width: 150,
+    height: 230,
     borderRadius: 30,
     padding: 25,
+    marginRight: 16,
     justifyContent: 'space-between',
     shadowColor: '#000',
     shadowOffset: {
@@ -396,37 +411,81 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#4CAF50',
   },
-  floatingButton: {
+  inputContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+    height: 200,
+    backgroundColor: '#FFFFFF',
+  },
+  inputWrapper: {
     position: 'absolute',
-    bottom: 100, // Position above the bottom navigation (60px height + 20px margin)
-    left: 20,
-    right: 20,
-    backgroundColor: '#000000',
-    height: 56,
-    borderRadius: 28,
-    flexDirection: 'row',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#00ff88',
+    padding: 6,
+    backgroundColor: '#1f1f1f',
+    shadowColor: '#00ff88',
+    shadowOpacity: 0.35,
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: 8,
+    width: '100%',
+    height: 170,
+  },
+  glowRing: { 
+    borderRadius: 14,
+    padding: 2,
+    backgroundColor: '#FFFFFF',
+    alignSelf: 'stretch',
+  },
+  input: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+    borderColor: '#3a3a3a',
+    paddingHorizontal: 14,
+    paddingBottom: 40,
+    color: '#e5e7eb',
+    textAlignVertical: 'top',
+  },
+  sendBtn: {
+    position: 'absolute',
+    right: 12,
+    bottom: 10,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-    zIndex: 1000, // Ensure it floats above all content
   },
-  floatingButtonIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 8,
-    tintColor: '#FFFFFF',
+  attachBtn: {
+    position: 'absolute',
+    left: 12,
+    bottom: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  floatingButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+  iconImg: {
+    width: 33,
+    height: 33,
+    padding: 10,
+    margin: 10,
+  },
+  micBtn: {
+    position: 'absolute',
+    right: 52,
+    bottom: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sendImg: {
+    height: 33,
+    width: 33,
   },
   businessOperationsLabel: {
     flexDirection: 'row',
@@ -444,24 +503,31 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#9E9E9E',
   },
-  bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
+  bottomNavContainer: {
     height: 60,
     backgroundColor: '#FFFFFF',
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
+  },
+  bottomNavScroll: {
+    flex: 1,
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 20,
+    minWidth: '100%',
   },
   navItem: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 40,
+    width: 50,
     height: 40,
+    marginHorizontal: 8,
   },
   navIcon: {
-    fontSize: 20,
+    width: 24,
+    height: 24,
   },
   activeProfileIcon: {
     width: 50,
@@ -474,7 +540,6 @@ const styles = StyleSheet.create({
   activeProfileText: {
     width: 30,
     paddingRight:5,
-    
   },
   modalOverlay: {
     flex: 1,
@@ -508,10 +573,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666666',
     fontWeight: '400',
-  },
-  iconImg:{
-    width: 20,
-    height: 20,
   },
   messageIcon:{
 
