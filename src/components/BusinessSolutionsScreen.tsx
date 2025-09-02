@@ -64,7 +64,9 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
       {/* Header with Back Button and Hamburger Menu */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={onBack}>
-          <Text style={styles.backButtonText}>‹</Text>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>H</Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuButton} onPress={() => setShowMenu(true)}>
           <View style={styles.hamburgerIcon}>
@@ -79,75 +81,72 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
       <View style={styles.scrollContainer}>
         {/* Avatar and Title */}
         <View style={styles.titleSection}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>H</Text>
-          </View>
+          
           <Text style={styles.title}>How do I help your business today?</Text>
         </View>
 
-        {/* Options Row - Horizontally Scrollable Cards */}
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.cardsScrollContent}
-          style={styles.cardsScrollContainer}
-        >
-          <TouchableOpacity style={[styles.card, styles.consultantCard]}>
-            <View style={styles.cardTop}>
-              <View style={styles.personIcon}>
-                <Image
-                  source={require('../../assets/user.png')} 
-                  style={styles.chatBubble}
-                  resizeMode="contain" 
-                />
+        {/* Cards Grid - 2x2 Layout */}
+        <View style={styles.cardsGrid}>
+          <View style={styles.cardsRow}>
+            <TouchableOpacity style={[styles.card, styles.consultantCard]}>
+              <View style={styles.cardTop}>
+                <View style={styles.personIcon}>
+                  <Image
+                    source={require('../../assets/user.png')} 
+                    style={styles.chatBubble}
+                    resizeMode="contain" 
+                  />
+                </View>
+                <Text style={styles.arrowIcon}>›</Text>
               </View>
-              <Text style={styles.arrowIcon}>›</Text>
-            </View>
-            <Text style={styles.cardText}>Talk with Consultant</Text>
-          </TouchableOpacity>
+              <Text style={styles.cardText}>Talk with Consultant</Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.card, styles.consultantCard]}>
-            <View style={styles.cardTop}>
-              <View style={styles.personIcon}>
-                <Image
-                  source={require('../../assets/user.png')} 
-                  style={styles.chatBubble}
-                  resizeMode="contain" 
-                />
+            <TouchableOpacity style={[styles.card, styles.consultantCard]}>
+              <View style={styles.cardTop}>
+                <View style={styles.personIcon}>
+                  <Image
+                    source={require('../../assets/user.png')} 
+                    style={styles.chatBubble}
+                    resizeMode="contain" 
+                  />
+                </View>
+                <Text style={styles.arrowIcon}>›</Text>
               </View>
-              <Text style={styles.arrowIcon}>›</Text>
-            </View>
-            <Text style={styles.cardText}>Talk with Consultant</Text>
-          </TouchableOpacity>
+              <Text style={styles.cardText}>Talk with Consultant</Text>
+            </TouchableOpacity>
+          </View>
 
-          <TouchableOpacity style={[styles.card, styles.consultantCard]}>
-            <View style={styles.cardTop}>
-              <View style={styles.personIcon}>
-                <Image
-                  source={require('../../assets/user.png')} 
-                  style={styles.chatBubble}
-                  resizeMode="contain" 
-                />
+          <View style={styles.cardsRow}>
+            <TouchableOpacity style={[styles.card, styles.consultantCard]}>
+              <View style={styles.cardTop}>
+                <View style={styles.personIcon}>
+                  <Image
+                    source={require('../../assets/user.png')} 
+                    style={styles.chatBubble}
+                    resizeMode="contain" 
+                  />
+                </View>
+                <Text style={styles.arrowIcon}>›</Text>
               </View>
-              <Text style={styles.arrowIcon}>›</Text>
-            </View>
-            <Text style={styles.cardText}>Talk with Consultant</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity style={[styles.card, styles.aiCard]}>
-            <View style={styles.cardTop}>
-              <View style={styles.chatIcon}>
-                <Image
-                  source={require('../../assets/message.png')} 
-                  style={styles.chatBubble}
-                  resizeMode="contain" 
-                />
+              <Text style={styles.cardText}>Talk with Consultant</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={[styles.card, styles.aiCard]}>
+              <View style={styles.cardTop}>
+                <View style={styles.chatIcon}>
+                  <Image
+                    source={require('../../assets/message.png')} 
+                    style={styles.chatBubble}
+                    resizeMode="contain" 
+                  />
+                </View>
+                <Text style={styles.arrowIcon}>›</Text>
               </View>
-              <Text style={styles.arrowIcon}>›</Text>
-            </View>
-            <Text style={styles.cardText}>Chat with AI{'\n'}Assistant</Text>
-          </TouchableOpacity>
-        </ScrollView>
+              <Text style={styles.cardText}>Chat with AI{'\n'}Assistant</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
       {/* Input Section - Fixed at bottom */}
@@ -169,13 +168,13 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
             />
             {/* Attach button - bottom left */}
             <TouchableOpacity onPress={() => {}} activeOpacity={0.7} style={styles.attachBtn}>
-              <Image source={require('../../assets/attach.png')} style={styles.iconImg} resizeMode="contain" />
+              <Image source={require('../../assets/WhiteAttach.png')} style={styles.iconImg} resizeMode="contain" />
             </TouchableOpacity>
             {/* Mic button - left to send */}
             <TouchableOpacity onPress={() => {}} activeOpacity={0.7} style={styles.micBtn}>
-              <Image source={require('../../assets/mic.png')} style={styles.iconImg} resizeMode="contain" />
+              <Image source={require('../../assets/WhiteMic.png')} style={styles.iconImg} resizeMode="contain" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleSend} activeOpacity={0.8} style={styles.sendBtn}>
+            <TouchableOpacity onPress={onNavigateToHome} activeOpacity={0.8} style={styles.sendBtn}>
               <Image source={require('../../assets/send.png')} style={styles.sendImg} resizeMode="contain" />
             </TouchableOpacity>
           </View>
@@ -251,7 +250,7 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F1F1F1',
   },
   header: {
     flexDirection: 'row',
@@ -305,6 +304,7 @@ const styles = StyleSheet.create({
     marginLeft:20,
   },
   avatar: {
+    marginTop:15,
     width: 50,
     height: 50,
     borderRadius: 35,
@@ -324,24 +324,22 @@ const styles = StyleSheet.create({
     color: '#000000',
     lineHeight: 50,
   },
-  cardsScrollContainer: {
+    cardsGrid: {
+    paddingLeft: 20,
+    paddingRight: 30,
     marginBottom: 24,
-  },
-  cardsScrollContent: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
   },
   cardsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // marginBottom: 24,
+    marginBottom: 16,
   },
   card: {
-    width: 150,
-    height: 230,
+    flex: 1,
+    height: 150,
     borderRadius: 30,
     padding: 25,
-    marginRight: 16,
+    marginHorizontal: 8,
     justifyContent: 'space-between',
     shadowColor: '#000',
     shadowOffset: {
@@ -413,9 +411,9 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 20,
+    paddingBottom:190,
     height: 200,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F1F1F1',
   },
   inputWrapper: {
     position: 'absolute',
@@ -423,7 +421,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#00ff88',
     padding: 6,
-    backgroundColor: '#1f1f1f',
+    backgroundColor: '#FFFFFF',
     shadowColor: '#00ff88',
     shadowOpacity: 0.35,
     shadowOffset: { width: 0, height: 0 },
@@ -444,7 +442,6 @@ const styles = StyleSheet.create({
     borderColor: '#3a3a3a',
     paddingHorizontal: 14,
     paddingBottom: 40,
-    color: '#e5e7eb',
     textAlignVertical: 'top',
   },
   sendBtn: {
