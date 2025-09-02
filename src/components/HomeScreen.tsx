@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Platform, FlatList, TouchableOpacity, Pressable, Image, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TextInput, KeyboardAvoidingView, Platform, FlatList, TouchableOpacity, Pressable, Image, ScrollView, Modal, Alert } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -19,16 +19,18 @@ interface ChatResponse {
 
 
 type HomeScreenProps = {
-  displayName: string;
-  onLogout?: () => void;
+  displayName: string;
+  onLogout?: () => void;
+  onBack?: () => void;
 };
 
-const HomeScreen = ({ displayName, onLogout }: HomeScreenProps) => {
-  const [draft, setDraft] = React.useState('');
-  const [messages, setMessages] = React.useState<Array<{role: string, content: string}>>([]);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [showHeader, setShowHeader] = React.useState(true);
-  const inputRef = React.useRef<TextInput>(null);
+const HomeScreen = ({ displayName, onLogout, onBack }: HomeScreenProps) => {
+  const [draft, setDraft] = React.useState('');
+  const [messages, setMessages] = React.useState<Array<{role: string, content: string}>>([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [showHeader, setShowHeader] = React.useState(true);
+  const [showMenu, setShowMenu] = React.useState(false);
+  const inputRef = React.useRef<TextInput>(null);
   const handleSend = () => {
     const trimmed = draft.trim();
     if (!trimmed) return;
@@ -87,26 +89,55 @@ const HomeScreen = ({ displayName, onLogout }: HomeScreenProps) => {
     
     setDraft('');
   };
-  const handleLogout = async () => {
-    try {
-      let shouldSignOut = true;
-      try {
-        if (typeof (GoogleSignin as any).hasPreviousSignIn === 'function') {
-          const hasPrev = await (GoogleSignin as any).hasPreviousSignIn();
-          shouldSignOut = hasPrev;
-        }
-      } catch {}
-      if (shouldSignOut) {
-        try { await GoogleSignin.revokeAccess(); } catch {}
-        try { await GoogleSignin.signOut(); } catch {}
-      }
-    } catch {}
-    onLogout && onLogout();
-  };
+  const handleLogout = async () => {
+    Alert.alert(
+      'Logout',
+      'Are you sure you want to logout?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          style: 'destructive',
+          onPress: async () => {
+            setShowMenu(false);
+            try {
+              let shouldSignOut = true;
+              try {
+                if (typeof (GoogleSignin as any).hasPreviousSignIn === 'function') {
+                  const hasPrev = await (GoogleSignin as any).hasPreviousSignIn();
+                  shouldSignOut = hasPrev;
+                }
+              } catch {}
+              if (shouldSignOut) {
+                try { await GoogleSignin.revokeAccess(); } catch {}
+                try { await GoogleSignin.signOut(); } catch {}
+              }
+            } catch {}
+            onLogout && onLogout();
+          },
+        },
+      ]
+    );
+  };
   return (
     <SafeAreaView style={styles.container}>
       {showHeader && (
         <View style={styles.header}>
+          <View style={styles.headerTop}>
+            <TouchableOpacity style={styles.backButton} onPress={onBack}>
+              <Text style={styles.backButtonText}>‹</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.menuButton} onPress={() => setShowMenu(true)}>
+              <View style={styles.hamburgerIcon}>
+                <View style={styles.hamburgerLine} />
+                <View style={styles.hamburgerLine} />
+                <View style={styles.hamburgerLine} />
+              </View>
+            </TouchableOpacity>
+          </View>
           <Text style={styles.greeting}>Good Morning, <Text style={styles.bold}>{displayName}</Text></Text>
           <Text style={styles.sub}>what can I do for you?</Text>
         </View>
@@ -171,6 +202,26 @@ const HomeScreen = ({ displayName, onLogout }: HomeScreenProps) => {
           </View>
         </Pressable>
       </KeyboardAvoidingView>
+
+      {/* Hamburger Menu Modal */}
+      <Modal
+        visible={showMenu}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowMenu(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay} 
+          activeOpacity={1} 
+          onPress={() => setShowMenu(false)}
+        >
+          <View style={styles.menuContainer}>
+            <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
+              <Text style={styles.menuItemText}>Sign out</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -180,12 +231,51 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'black',
   },
-  header: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
-    alignItems: 'center',
-  },
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+    alignItems: 'center',
+  },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 20,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#2a2a2a',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  backButtonText: {
+    fontSize: 24,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+  },
+  menuButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#2a2a2a',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  hamburgerIcon: {
+    width: 20,
+    height: 16,
+    justifyContent: 'space-between',
+  },
+  hamburgerLine: {
+    width: 20,
+    height: 2,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 1,
+  },
   inputContainer: {
     paddingHorizontal: 20,
     paddingBottom: 20,
@@ -371,9 +461,42 @@ const styles = StyleSheet.create({
   userMessageText: {
     color: '#000000',
   },
-  assistantMessageText: {
-    color: '#e5e7eb',
-  },
+  assistantMessageText: {
+    color: '#e5e7eb',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    paddingTop: 60,
+    paddingRight: 20,
+  },
+  menuContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 5,
+    minWidth: 120,
+  },
+  menuItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  menuItemText: {
+    fontSize: 14,
+    color: '#666666',
+    fontWeight: '400',
+  },
 });
 
 export default HomeScreen;
