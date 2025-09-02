@@ -7,6 +7,7 @@ import {
   Modal,
   Alert,
   Image,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -58,8 +59,8 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
         </TouchableOpacity>
       </View>
 
-      {/* Main Content */}
-      <View style={styles.content}>
+      {/* Main Content - Scrollable */}
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
         {/* Avatar and Title */}
         <View style={styles.titleSection}>
           <View style={styles.avatar}>
@@ -98,15 +99,51 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
           <Text style={styles.labelText}>Business Solutions</Text>
         </View>
 
-        {/* Start Business Chat Button */}
-        <TouchableOpacity style={styles.actionButton} onPress={onNavigateToHome}>
-          {/* <Image
-            source={require('../../assets/post-feed-navigation-item.png')} 
-                style={styles.messageIcon}
-                resizeMode="contain"
-          /> */}
-          <Text style={styles.actionButtonText}>Start business chat</Text>
-        </TouchableOpacity>
+
+        <View style={styles.businessSolutionsLabel}>
+          <View style={styles.graphIcon} />
+          <Text style={styles.labelText}>Business Solutions</Text>
+        </View>
+        <View style={styles.businessSolutionsLabel}>
+          <View style={styles.graphIcon} />
+          <Text style={styles.labelText}>Business Solutions</Text>
+        </View>
+        <View style={styles.businessSolutionsLabel}>
+          <View style={styles.graphIcon} />
+          <Text style={styles.labelText}>Business Solutions</Text>
+        </View>
+        <View style={styles.businessSolutionsLabel}>
+          <View style={styles.graphIcon} />
+          <Text style={styles.labelText}>Business Solutions</Text>
+        </View>
+        <View style={styles.businessSolutionsLabel}>
+          <View style={styles.graphIcon} />
+          <Text style={styles.labelText}>Business Solutions</Text>
+        </View>
+        <View style={styles.businessSolutionsLabel}>
+          <View style={styles.graphIcon} />
+          <Text style={styles.labelText}>Business Solutions</Text>
+        </View>
+        <View style={styles.businessSolutionsLabel}>
+          <View style={styles.graphIcon} />
+          <Text style={styles.labelText}>Business Solutions</Text>
+        </View>
+        <View style={styles.businessSolutionsLabel}>
+          <View style={styles.graphIcon} />
+          <Text style={styles.labelText}>Business Solutions</Text>
+        </View>
+        <View style={styles.businessSolutionsLabel}>
+          <View style={styles.graphIcon} />
+          <Text style={styles.labelText}>Business Solutions</Text>
+        </View>
+        <View style={styles.businessSolutionsLabel}>
+          <View style={styles.graphIcon} />
+          <Text style={styles.labelText}>Business Solutions</Text>
+        </View>
+
+        
+
+
 
         {/* Business Operations Subtext */}
         <View style={styles.businessOperationsLabel}>
@@ -114,7 +151,18 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
           
           <Text style={styles.subtext}>Business Operations</Text>
         </View>
-      </View>
+
+      </ScrollView>
+
+      {/* Floating Action Button - Fixed position over content */}
+      <TouchableOpacity style={styles.floatingButton} onPress={onNavigateToHome}>
+        <Image
+          source={require('../../assets/post-feed-navigation-item.png')} 
+          style={styles.floatingButtonIcon}
+          resizeMode="contain"
+        />
+        <Text style={styles.floatingButtonText}>Start business chat</Text>
+      </TouchableOpacity>
 
       {/* Bottom Navigation Bar */}
       <View style={styles.bottomNav}>
@@ -229,9 +277,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
     borderRadius: 1,
   },
-  content: {
+  scrollContainer: {
     flex: 1,
+  },
+  scrollContent: {
     paddingHorizontal: 20,
+    paddingBottom: 100, // Add space for the floating button
   },
   titleSection: {
     marginBottom: 24,
@@ -348,15 +399,34 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#4CAF50',
   },
-  actionButton: {
+  floatingButton: {
+    position: 'absolute',
+    bottom: 100, // Position above the bottom navigation (60px height + 20px margin)
+    left: 20,
+    right: 20,
     backgroundColor: '#000000',
-    height: 48,
-    borderRadius: 24,
+    height: 56,
+    borderRadius: 28,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+    zIndex: 1000, // Ensure it floats above all content
   },
-  actionButtonText: {
+  floatingButtonIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
+    tintColor: '#FFFFFF',
+  },
+  floatingButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
