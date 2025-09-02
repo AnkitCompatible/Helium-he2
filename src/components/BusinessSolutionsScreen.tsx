@@ -4,10 +4,12 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   Modal,
   Alert,
+  Image,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 type BusinessSolutionsScreenProps = {
   displayName: string;
@@ -98,12 +100,18 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
 
         {/* Start Business Chat Button */}
         <TouchableOpacity style={styles.actionButton} onPress={onNavigateToHome}>
+          {/* <Image
+            source={require('../../assets/post-feed-navigation-item.png')} 
+                style={styles.messageIcon}
+                resizeMode="contain"
+          /> */}
           <Text style={styles.actionButtonText}>Start business chat</Text>
         </TouchableOpacity>
 
         {/* Business Operations Subtext */}
         <View style={styles.businessOperationsLabel}>
           <View style={styles.operationsIcon} />
+          
           <Text style={styles.subtext}>Business Operations</Text>
         </View>
       </View>
@@ -124,7 +132,11 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
           <View style={styles.activeProfileIcon}>
-            <Text style={styles.activeProfileText}>👤</Text>
+            {/* <Text ></Text> */}
+             <Image 
+                source={require('../../assets/userIcon.png')} 
+                style={styles.activeProfileText}
+                resizeMode="contain" />          
           </View>
         </TouchableOpacity>
       </View>
@@ -205,9 +217,9 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 50,
+    height: 50,
+    borderRadius: 35,
     backgroundColor: '#C6FF00',
     alignItems: 'center',
     justifyContent: 'center',
@@ -219,21 +231,21 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   title: {
-    fontSize: 24,
+    fontSize: 40,
     fontWeight: 'bold',
     color: '#000000',
-    lineHeight: 30,
+    lineHeight: 50,
   },
   cardsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 24,
+    // marginBottom: 24,
   },
   card: {
     width: '45%',
-    height: 150,
-    borderRadius: 16,
-    padding: 16,
+    height: 250,
+    borderRadius: 30,
+    padding: 25,
     justifyContent: 'space-between',
     shadowColor: '#000',
     shadowOffset: {
@@ -245,10 +257,10 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   consultantCard: {
-    backgroundColor: '#C6FF7F',
+    backgroundColor: '#7bc043',
   },
   aiCard: {
-    backgroundColor: '#B3E5FC',
+    backgroundColor: '#38ACEC',
   },
   cardTop: {
     flexDirection: 'row',
@@ -301,7 +313,8 @@ const styles = StyleSheet.create({
   businessSolutionsLabel: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
+    marginTop:20,
   },
   graphIcon: {
     width: 16,
@@ -321,7 +334,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   actionButtonText: {
     color: '#FFFFFF',
@@ -364,15 +377,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   activeProfileIcon: {
-    width: 32,
+    width: 50,
     height: 32,
-    borderRadius: 16,
+    borderRadius: 25,
     backgroundColor: '#C6FF00',
     alignItems: 'center',
     justifyContent: 'center',
   },
   activeProfileText: {
-    fontSize: 16,
+    width: 30,
+    paddingRight:5,
+    
   },
   modalOverlay: {
     flex: 1,
@@ -407,6 +422,13 @@ const styles = StyleSheet.create({
     color: '#666666',
     fontWeight: '400',
   },
+  iconImg:{
+    width: 20,
+    height: 20,
+  },
+  messageIcon:{
+
+  }
 });
 
 export default BusinessSolutionsScreen;
