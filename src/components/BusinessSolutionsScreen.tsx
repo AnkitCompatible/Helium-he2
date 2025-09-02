@@ -25,8 +25,18 @@ type BusinessSolutionsScreenProps = {
 
 const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBack }: BusinessSolutionsScreenProps) => {
   const [showMenu, setShowMenu] = React.useState(false);
+  const [showSidebar, setShowSidebar] = React.useState(false);
   const [draft, setDraft] = React.useState('');
   const inputRef = React.useRef<TextInput>(null);
+
+  // Sample chat history data
+  const [chatHistory] = React.useState([
+    { id: 1, title: "Business Strategy Discussion", timestamp: "2 hours ago", preview: "How can I improve my business..." },
+    { id: 2, title: "Marketing Campaign Ideas", timestamp: "1 day ago", preview: "What are some effective marketing..." },
+    { id: 3, title: "Financial Planning Help", timestamp: "3 days ago", preview: "I need help with budgeting..." },
+    { id: 4, title: "Product Development", timestamp: "1 week ago", preview: "How should I approach product..." },
+    { id: 5, title: "Team Management", timestamp: "2 weeks ago", preview: "What's the best way to manage..." },
+  ]);
 
   const handleSend = () => {
     const trimmed = draft.trim();
@@ -68,7 +78,7 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
             <Text style={styles.avatarText}>H</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuButton} onPress={() => setShowMenu(true)}>
+        <TouchableOpacity style={styles.menuButton} onPress={() => setShowSidebar(true)}>
           <View style={styles.hamburgerIcon}>
             <View style={styles.hamburgerLine} />
             <View style={styles.hamburgerLine} />
@@ -224,24 +234,54 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
         </ScrollView>
       </View>
 
-      {/* Hamburger Menu Modal */}
+      {/* Right Sidebar Menu */}
       <Modal
-        visible={showMenu}
+        visible={showSidebar}
         transparent={true}
         animationType="fade"
-        onRequestClose={() => setShowMenu(false)}
+        onRequestClose={() => setShowSidebar(false)}
       >
-        <TouchableOpacity 
-          style={styles.modalOverlay} 
-          activeOpacity={1} 
-          onPress={() => setShowMenu(false)}
-        >
-          <View style={styles.menuContainer}>
-            <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
-              <Text style={styles.menuItemText}>Sign out</Text>
-            </TouchableOpacity>
+        <View style={styles.sidebarOverlay}>
+          <TouchableOpacity 
+            style={styles.sidebarBackdrop} 
+            activeOpacity={1} 
+            onPress={() => setShowSidebar(false)}
+          />
+          <View style={styles.sidebarContainer}>
+            <View style={styles.sidebarHeader}>
+              <Text style={styles.sidebarTitle}>Chat History</Text>
+              <TouchableOpacity 
+                style={styles.closeButton} 
+                onPress={() => setShowSidebar(false)}
+              >
+                <Text style={styles.closeButtonText}>×</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView style={styles.historyList}>
+              {chatHistory.map((chat) => (
+                <TouchableOpacity 
+                  key={chat.id} 
+                  style={styles.historyItem}
+                  onPress={() => {
+                    setShowSidebar(false);
+                    onNavigateToHome();
+                  }}
+                >
+                  <Text style={styles.historyTitle}>{chat.title}</Text>
+                  <Text style={styles.historyPreview}>{chat.preview}</Text>
+                  <Text style={styles.historyTimestamp}>{chat.timestamp}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            
+            <View style={styles.sidebarFooter}>
+              <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                <Text style={styles.logoutButtonText}>Sign out</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
     </SafeAreaView>
   );
@@ -573,7 +613,98 @@ const styles = StyleSheet.create({
   },
   messageIcon:{
 
-  }
+  },
+  // Right Sidebar styles
+  sidebarOverlay: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  sidebarBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  sidebarContainer: {
+    width: 300,
+    height: '100%',
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: -2,
+      height: 0,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  sidebarHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  sidebarTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000000',
+  },
+  closeButton: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#F5F5F5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closeButtonText: {
+    fontSize: 18,
+    color: '#666666',
+    fontWeight: 'bold',
+  },
+  historyList: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  historyItem: {
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  historyTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000000',
+    marginBottom: 4,
+  },
+  historyPreview: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 4,
+  },
+  historyTimestamp: {
+    fontSize: 12,
+    color: '#999999',
+  },
+  sidebarFooter: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#E0E0E0',
+  },
+  logoutButton: {
+    backgroundColor: '#FF4444',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  logoutButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
 });
 
 export default BusinessSolutionsScreen;
