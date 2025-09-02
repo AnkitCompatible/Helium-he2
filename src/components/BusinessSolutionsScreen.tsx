@@ -119,16 +119,36 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
       {/* Bottom Navigation Bar */}
       <View style={styles.bottomNav}>
         <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>🏠</Text>
+          <Text style={styles.navIcon}>
+            <Image 
+                source={require('../../assets/home.png')} 
+                style={styles.activeProfileText}
+                resizeMode="contain" />          
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>📊</Text>
+          <Text style={styles.navIcon}>
+            <Image 
+                source={require('../../assets/chart.png')} 
+                style={styles.activeProfileText}
+                resizeMode="contain" />  
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>❓</Text>
+          <Text style={styles.navIcon}>
+            <Image 
+                source={require('../../assets/question.png')} 
+                style={styles.activeProfileText}
+                resizeMode="contain" />  
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>✓</Text>
+          <Text style={styles.navIcon}>
+            <Image 
+                source={require('../../assets/tick.png')} 
+                style={styles.activeProfileText}
+                resizeMode="contain" />  
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navItem}>
           <View style={styles.activeProfileIcon}>
