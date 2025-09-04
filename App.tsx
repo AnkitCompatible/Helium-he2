@@ -14,13 +14,17 @@ function App() {
   const isDarkMode = useColorScheme() === 'dark';
   const [displayName, setDisplayName] = React.useState<string | null>(null);
   const [currentScreen, setCurrentScreen] = React.useState<'login' | 'business' | 'home'>('login');
+  const [initialMessage, setInitialMessage] = React.useState<string>('');
 
   const handleAuthenticated = (name: string) => {
     setDisplayName(name);
     setCurrentScreen('business');
   };
 
-  const handleNavigateToHome = () => {
+  const handleNavigateToHome = (message?: string) => {
+    if (message) {
+      setInitialMessage(message);
+    }
     setCurrentScreen('home');
   };
 
@@ -52,7 +56,12 @@ function App() {
         />
       )}
       {currentScreen === 'home' && displayName && (
-        <HomeScreen displayName={displayName} onLogout={handleLogout} onBack={handleBackFromHome} />
+        <HomeScreen 
+          displayName={displayName} 
+          onLogout={handleLogout} 
+          onBack={handleBackFromHome}
+          initialMessage={initialMessage}
+        />
       )}
     </SafeAreaProvider>
   );

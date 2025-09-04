@@ -22,73 +22,92 @@ type HomeScreenProps = {
   displayName: string;
   onLogout?: () => void;
   onBack?: () => void;
+  initialMessage?: string;
 };
 
-const HomeScreen = ({ displayName, onLogout, onBack }: HomeScreenProps) => {
+const HomeScreen = ({ displayName, onLogout, onBack, initialMessage }: HomeScreenProps) => {
   const [draft, setDraft] = React.useState('');
   const [messages, setMessages] = React.useState<Array<{role: string, content: string}>>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [showHeader, setShowHeader] = React.useState(true);
   const [showMenu, setShowMenu] = React.useState(false);
   const inputRef = React.useRef<TextInput>(null);
-  const handleSend = () => {
-    const trimmed = draft.trim();
-    if (!trimmed) return;
-    
-    setIsLoading(true);
-    setShowHeader(false); // Hide header after first message
-    console.log('[Home] Sent message:', trimmed);
-    
-    // Add user message to chat
-    const userMessage = { role: 'user', content: trimmed };
-    setMessages(prev => [...prev, userMessage]);
-    
-    fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer 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"
-      },
-      body: JSON.stringify({
-        model: "deepseek/deepseek-r1:free",
-        messages: [
-          {
-            role: "user",
-            content: trimmed,
-          },
-        ],
-      }),
-    })
-        .then(response => {
-      console.log('[Home] Response status:', response.status);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json() as Promise<ChatResponse>;
+
+  // Auto-send initial message if provided
+  React.useEffect(() => {
+    if (initialMessage && initialMessage.trim()) {
+      console.log('[Home] Auto-sending initial message:', initialMessage);
+      // setDraft(initialMessage);
+      // Auto-send the message after a short delay to ensure component is mounted
+      setTimeout(() => {
+        handleSendWithMessage(initialMessage);
+      }, 100);
+    }
+  }, [initialMessage]);
+
+  const handleSendWithMessage = (message: string) => {
+    const trimmed = message.trim();
+    if (!trimmed) return;
+    
+    setIsLoading(true);
+    console.log('[Home] Sent message:', trimmed);
+    
+    // Add user message to chat
+    const userMessage = { role: 'user', content: trimmed };
+    setMessages(prev => [...prev, userMessage]);
+    
+    fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer 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"
+      },
+      body: JSON.stringify({
+        model: "deepseek/deepseek-r1:free",
+        messages: [
+          {
+            role: "user",
+            content: trimmed,
+          },
+        ],
+      }),
     })
-    .then((data: ChatResponse) => {
-      console.log('[Home] API Response:', data);
-      
-      // Extract the AI response content
-      const aiResponse = data.choices[0]?.message?.content;
-      if (aiResponse) {
-        console.log('[Home] AI Response:', aiResponse);
-        const assistantMessage = { role: 'assistant', content: aiResponse };
-        setMessages(prev => [...prev, assistantMessage]);
-      }
-    })
-    .catch(error => {
-      console.error('[Home] API Error:', error);
-      // Add error message to chat
-      const errorMessage = { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' };
-      setMessages(prev => [...prev, errorMessage]);
-    })
-    .finally(() => {
-      setIsLoading(false);
-    });
-    
-    setDraft('');
-  };
+      .then(response => {
+        console.log('[Home] Response status:', response.status);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json() as Promise<ChatResponse>;
+      })
+      .then((data: ChatResponse) => {
+        console.log('[Home] API Response:', data);
+        
+        // Extract the AI response content
+        const aiResponse = data.choices[0]?.message?.content;
+        if (aiResponse) {
+          console.log('[Home] AI Response:', aiResponse);
+          const assistantMessage = { role: 'assistant', content: aiResponse };
+          setMessages(prev => [...prev, assistantMessage]);
+        }
+      })
+      .catch(error => {
+        console.error('[Home] API Error:', error);
+        // Add error message to chat
+        const errorMessage = { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' };
+        setMessages(prev => [...prev, errorMessage]);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  const handleSend = () => {
+    const trimmed = draft.trim();
+    if (!trimmed) return;
+    
+    handleSendWithMessage(trimmed);
+    setDraft('');
+  };
   const handleLogout = async () => {
     Alert.alert(
       'Logout',
@@ -124,24 +143,26 @@ const HomeScreen = ({ displayName, onLogout, onBack }: HomeScreenProps) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      {showHeader && (
-        <View style={styles.header}>
-          <View style={styles.headerTop}>
-            <TouchableOpacity style={styles.backButton} onPress={onBack}>
-              <Text style={styles.backButtonText}>‹</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuButton} onPress={() => setShowMenu(true)}>
-              <View style={styles.hamburgerIcon}>
-                <View style={styles.hamburgerLine} />
-                <View style={styles.hamburgerLine} />
-                <View style={styles.hamburgerLine} />
-              </View>
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.greeting}>Good Morning, <Text style={styles.bold}>{displayName}</Text></Text>
-          <Text style={styles.sub}>what can I do for you?</Text>
+      {/* <View style={styles.header}> */}
+        <View style={styles.headerTop}>
+          <TouchableOpacity style={styles.backButton} onPress={onBack}>
+            <Text style={styles.backButtonText}>‹</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuButton} onPress={() => setShowMenu(true)}>
+            <View style={styles.hamburgerIcon}>
+              <View style={styles.hamburgerLine} />
+              <View style={styles.hamburgerLine} />
+              <View style={styles.hamburgerLine} />
+            </View>
+          </TouchableOpacity>
         </View>
-      )}
+        {/* {messages.length === 0 && (
+          <>
+            <Text style={styles.greeting}>Good Morning, <Text style={styles.bold}>{displayName}</Text></Text>
+            <Text style={styles.sub}>what can I do for you?</Text>
+          </>
+        )}
+      </View> */}
 
       {/* Messages Display */}
       <ScrollView 
@@ -149,6 +170,11 @@ const HomeScreen = ({ displayName, onLogout, onBack }: HomeScreenProps) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.messagesContentContainer}
       >
+        {messages.length > 0 && (
+          <View style={styles.chatTitleContainer}>
+            <Text style={styles.chatTitle}>Chat with AI Assistant</Text>
+          </View>
+        )}
         {messages.map((message, index) => (
           <View key={index} style={[
             styles.messageBubble,
@@ -349,9 +375,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#3a3a3a',
     paddingHorizontal: 14,
-    paddingVertical: 12,
+    paddingTop: 12,
+    paddingBottom: 50,
     color: '#e5e7eb',
-    textAlignVertical: 'center',
+    textAlignVertical: 'top',
     fontSize: 16,
   },
   inlineAccessoryLeft: {
@@ -381,7 +408,7 @@ const styles = StyleSheet.create({
   sendBtn: {
     position: 'absolute',
     right: 12,
-    top: 12,
+    bottom: 12,
     width: 36,
     height: 36,
     borderRadius: 18,
@@ -396,7 +423,7 @@ const styles = StyleSheet.create({
   attachBtn: {
     position: 'absolute',
     left: 12,
-    top: 14,
+    bottom: 14,
     width: 32,
     height: 32,
     borderRadius: 16,
@@ -417,7 +444,7 @@ const styles = StyleSheet.create({
   micBtn: {
     position: 'absolute',
     right: 52,
-    top: 14,
+    bottom: 14,
     width: 32,
     height: 32,
     borderRadius: 16,
@@ -500,6 +527,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666666',
     fontWeight: '400',
+  },
+  chatTitleContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+  },
+  chatTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#e5e7eb',
+    textAlign: 'center',
   },
 });
 

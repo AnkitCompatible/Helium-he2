@@ -6,7 +6,7 @@ import { MessageSquare,User,House,ChartColumn,CircleQuestionMark , CircleCheck,}
 
 type BusinessSolutionsScreenProps = {
   displayName: string;
-  onNavigateToHome: () => void;
+  onNavigateToHome: (message?: string) => void;
   onLogout?: () => void;
   onBack?: () => void;
 };
@@ -34,7 +34,7 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
     console.log('[Business] Sent message:', trimmed);
     setDraft('');
     // Navigate to home screen with the message
-    onNavigateToHome();
+    onNavigateToHome(trimmed);
   };
 
   const toggleDarkMode = () => {
@@ -186,7 +186,7 @@ const BusinessSolutionsScreen = ({ displayName, onNavigateToHome, onLogout, onBa
                 resizeMode="contain" 
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={onNavigateToHome} activeOpacity={0.8} style={styles.sendBtn}>
+            <TouchableOpacity onPress={handleSend} activeOpacity={0.8} style={styles.sendBtn}>
               <Image  source={isDarkMode ? require('../../assets/darkSend.png') : require('../../assets/send.png')} 
                style={styles.sendImg} resizeMode="contain" />
             </TouchableOpacity>
